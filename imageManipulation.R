@@ -15,7 +15,7 @@ for (pageNum in 1:120){
   page_text <- gsub("\n", " ", page_text)
   page_text <- gsub("i[=][0-9]+,", " ", page_text)
   cell_ids_in_page_order <- unlist(strsplit(trimws(page_text), split = "[ ]+"))
-
+  
   trimmed <- image_trim(cells)
   counter <-1
   for(colNum in 1:5){
