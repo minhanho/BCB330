@@ -1,16 +1,21 @@
+library(magrittr)
 library(dplyr)
+library(tidyr)
 library(rhdf5)
 
-h5ls("/Users/lfrench/Desktop/results/TF_FeatureExtraction/features.h5")
-
-(mydata <- h5read("/Users/lfrench/Desktop/results/TF_FeatureExtraction/features.h5", "/resnet_v1_101"))
-table <- tbl_df(mydata <- h5read("/Users/lfrench/Desktop/results/TF_FeatureExtraction/features.h5", "/resnet_v1_101/logits"))
+table <- tbl_df(h5read("/Users/lfrench/Desktop/results/TF_FeatureExtraction/features.h5", "/resnet_v1_101/logits"))
+table <- tbl_df(t(as.matrix(table)))
 
 filenames <- h5read("/Users/lfrench/Desktop/results/TF_FeatureExtraction/features.h5", "filenames")
+table %<>% mutate( fullFilename = filenames) 
+
 filenames <- gsub(".*processed/", "", filenames)
-colnames(table) <- filenames
-#make.names(filenames)
+
+table %<>% mutate( filename = filenames) %>% select(filename, everything())
+
 table[1:5,1:5]
 
-logits <- h5read("/Users/lfrench/Desktop/results/TF_FeatureExtraction/features.h5", "/resnet_v1_101/logits")
+#full filename is at the end if needed
+tail(colnames(table))
+
 
