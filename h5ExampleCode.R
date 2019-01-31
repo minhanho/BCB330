@@ -4,7 +4,7 @@ library(tidyr)
 library(rhdf5)
 
 table <- tbl_df(h5read("/Users/lfrench/Desktop/results/TF_FeatureExtraction/features.h5", "/resnet_v1_101/logits"))
-table <- tbl_df(t(as.matrix(table)))
+table <- as_tibble(t(as.matrix(table)), .name.repair=NULL)
 
 filenames <- h5read("/Users/lfrench/Desktop/results/TF_FeatureExtraction/features.h5", "filenames")
 table %<>% mutate( fullFilename = filenames) 
