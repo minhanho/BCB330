@@ -14,8 +14,12 @@ filenames <- gsub(".*processed/", "", filenames)
 table %<>% mutate( filename = filenames) %>% select(filename, everything())
 
 table[1:5,1:5]
-
+table %<>% mutate( filename = gsub("cell", "", filename))
+table %<>% mutate( filename = gsub(".png", "", filename))
+table %<>% mutate( filename = gsub("−", "_", filename))
+table %<>%  rename(cell_id = filename)
 #full filename is at the end if needed
 tail(colnames(table))
+
 
 
