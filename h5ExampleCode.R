@@ -22,4 +22,12 @@ table %<>%  rename(cell_id = filename)
 tail(colnames(table))
 
 
+linLabMatrix <- read_tsv("/Users/lfrench/Desktop/results/CellTypesAging/data/Zeisel/expression_mRNA_17-Aug-2014.tsv", col_names=F)
+cellTable <- as_tibble(t(linLabMatrix[1:10,2:ncol(linLabMatrix)]), .name.repair=NULL)
+colnames(cellTable) <- cellTable[1,]
+(cellTable <- cellTable[-1,])
 
+table <- inner_join(cellTable %>% select(cell_id, level1class), table)
+
+
+table %>% write_csv("/Users/lfrench/Desktop/results/TF_FeatureExtraction/features_with_level1class.csv")
