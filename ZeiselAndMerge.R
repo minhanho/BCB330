@@ -1,3 +1,4 @@
+library(reshape2)
 library(dplyr)
 library(magrittr)
 library(readr)
@@ -40,15 +41,26 @@ dim(full_table)
 
 system.time(full_table %>% summarise_at(vars(starts_with("V9")), funs(cor(., full_table$`4930431P03Rik`))))
 
-32*10*17000/60/60/24
 
 cor.test(full_table$`4930431P03Rik`, full_table$V998)
 
-system.time(cor(full_table[, 2:5000]))
+full_table %>% write_csv("/Users/lfrench/Desktop/results/TF_FeatureExtraction/features_with_level1class_with_genes.csv")
 
-#full_table %>% summarise_at(vars(starts_with("V")), funs(cor(., full_table[, colVariable])))
+#correlate full table
+system.time(full_cor <- cor(full_table %>% select_if(is.numeric)))
+#takes 15 minutes on Leon's machine
+dim(full_cor)
+as_tibble(full_cor)
+tail(colnames(full_cor))
 
+#cut it down to just image features in cols
+full_cor <- full_cor[, grepl("^V[0-9]+$", colnames(full_cor))]
+full_cor <- full_cor[setdiff(rownames(full_cor), colnames(full_cor)), ]
 
-#result = foreach(i = 1:5, .combine = rbind) %dopar% {
-#  data.frame(x = runif(40), i = i)
-#}
+full_cor_melted <- as_tibble(melt(full_cor))
+full_cor_melted %<>% rename(gene_symbol=Var1, image_feature = Var2, correlation=value)
+full_cor_melted %<>% arrange(-abs(correlation))
+
+cor.test(full_table$Tspan13, full_table$V932)
+
+full_cor_melted %>% select(gene_symbol) %>% distinct() %>% write_csv("/Users/lfrench/Downloads/images.csv")
