@@ -2,8 +2,21 @@ from tpot import TPOTClassifier
 from sklearn.model_selection import train_test_split
 import pandas as pd
 
-df = pd.read_csv("/Users/lfrench/Desktop/results/TF_FeatureExtraction/features_with_level1class.csv")
-cells_target = df["level1class"]
+df = pd.read_csv("/Users/minhanho/Documents/BCB330/TF_FeatureExtraction/features_with_level1class.csv")
+
+cell_types = {}
+count = 0
+for i in df["level1class"]:
+    if not cell_types.get(i):
+        cell_types[i] = count
+        count += 1
+
+for x in cell_types:
+    df["level1class"] = df["level1class"].replace(x, cell_types[x])
+
+df.rename(columns={'level1class': 'class'}, inplace=True)
+
+cells_target = df["class"]
 
 filter_col = [col for col in df if col.startswith('V')]
 
