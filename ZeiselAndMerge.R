@@ -2,13 +2,12 @@ library(reshape2)
 library(dplyr)
 library(magrittr)
 library(readr)
-linLabMatrix <- read_tsv("/Users/lfrench/Desktop/results/CellTypesAging/data/Zeisel/expression_mRNA_17-Aug-2014.tsv", col_names=F)
+library(rhdf5)
+linLabMatrix <- read_tsv("/Users/minhanho/Documents/BCB330/CellTypesAging/data/Zeisel/expression_mRNA_17-Aug-2014.tsv", col_names=F)
 
 cellTable <- as_tibble(t(linLabMatrix[1:10,2:ncol(linLabMatrix)]), .name.repair=NULL)
 colnames(cellTable) <- cellTable[1,]
 (cellTable <- cellTable[-1,])
-
-
 
 colnames(linLabMatrix) <- linLabMatrix[8,]
 linLabMatrix[1:15,1:15]
@@ -29,11 +28,30 @@ linLabMatrixTranspose <- as_tibble(reshape2::dcast(linLabMelted, formula=  cell_
 
 linLabMatrixTranspose$cell_id <- as.character(linLabMatrixTranspose$cell_id)
 
+table <- tbl_df(h5read("/Users/minhanho/Documents/BCB330/TF_FeatureExtraction/features.h5", "/resnet_v1_101/logits"))
+table <- as_tibble(t(as.matrix(table)), .name.repair=NULL)
+
+filenames <- h5read("/Users/minhanho/Documents/BCB330/TF_FeatureExtraction/features.h5", "filenames")
+table %<>% mutate( fullFilename = filenames) 
+filenames <- gsub(".*processed/", "", filenames)
+
+table %<>% mutate( filename = filenames) %>% select(filename, everything())
+table %<>% mutate( filename = gsub("cell", "", filename))
+table %<>% mutate( filename = gsub(".png", "", filename))
+table %<>% mutate( filename = gsub("−", "_", filename))
+table %<>%  rename(cell_id = filename)
+#full filename is at the end if needed
+
 length(intersect(linLabMatrixTranspose$cell_id, table$cell_id))
 
+cellTable <- as_tibble(t(linLabMatrix[1:10,2:ncol(linLabMatrix)]), .name.repair=NULL)
+colnames(cellTable) <- cellTable[1,]
+(cellTable <- cellTable[-1,])
+table <- inner_join(cellTable %>% select(level1class), table)
+table %<>%  rename(target = level1class)#TPOT processing
 
 #here table comes out of nowhere - needs fixing - from h5ExampleCode       
-intersect(head(sort(table$cell_id)), head(sort(linLabMatrixTranspose$cell_id)       ))
+intersect(head(sort(table$cell_id)), head(sort(linLabMatrixTranspose$cell_id)))
 
 
 full_table <- inner_join(linLabMatrixTranspose, table)
@@ -44,7 +62,7 @@ system.time(full_table %>% summarise_at(vars(starts_with("V9")), funs(cor(., ful
 
 cor.test(full_table$`4930431P03Rik`, full_table$V998)
 
-full_table %>% write_csv("/Users/lfrench/Desktop/results/TF_FeatureExtraction/features_with_level1class_with_genes.csv")
+full_table %>% write_csv("/Users/minhanho/Documents/BCB330/TF_FeatureExtraction/features_with_level1class_with_genes.csv")
 
 #correlate full table
 system.time(full_cor <- cor(full_table %>% select_if(is.numeric)))
@@ -63,4 +81,4 @@ full_cor_melted %<>% arrange(-abs(correlation))
 
 cor.test(full_table$Tspan13, full_table$V932)
 
-full_cor_melted %>% select(gene_symbol) %>% distinct() %>% write_csv("/Users/lfrench/Downloads/images.csv")
+full_cor_melted %>% select(gene_symbol) %>% distinct() %>% write_csv("/Users/minhanho/Downloads/images.csv")

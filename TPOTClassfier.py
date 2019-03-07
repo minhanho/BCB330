@@ -6,17 +6,15 @@ df = pd.read_csv("/Users/minhanho/Documents/BCB330/TF_FeatureExtraction/features
 
 cell_types = {}
 count = 0
-for i in df["level1class"]:
+for i in df["target"]:
     if not cell_types.get(i):
         cell_types[i] = count
         count += 1
 
 for x in cell_types:
-    df["level1class"] = df["level1class"].replace(x, cell_types[x])
+    df["target"] = df["target"].replace(x, cell_types[x])
 
-df.rename(columns={'level1class': 'class'}, inplace=True)
-
-cells_target = df["class"]
+cells_target = df["target"]
 
 filter_col = [col for col in df if col.startswith('V')]
 
