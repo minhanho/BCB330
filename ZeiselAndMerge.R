@@ -5,10 +5,8 @@ library(magrittr)
 library(readr)
 library(rhdf5)
 
-linLabMatrix <- read_tsv("/Users/minhanho/Documents/BCB330/CellTypesAging/data/Zeisel/expression_mRNA_17-Aug-2014.tsv", col_names=F)
-linLabMatrix <- read_tsv("/Users/lfrench/Desktop/results/CellTypesAging/data/Zeisel/expression_mRNA_17-Aug-2014.tsv", col_names=F)
-
-
+linLabMatrix <- read_tsv(here("Documents/BCB330/CellTypesAging/data/Zeisel/expression_mRNA_17-Aug-2014.tsv"), col_names=F)
+#linLabMatrix <- read_tsv("/Users/lfrench/Desktop/results/CellTypesAging/data/Zeisel/expression_mRNA_17-Aug-2014.tsv", col_names=F)
 cellTable <- as_tibble(t(linLabMatrix[1:10,2:ncol(linLabMatrix)]), .name.repair=NULL)
 colnames(cellTable) <- cellTable[1,]
 (cellTable <- cellTable[-1,])
@@ -32,36 +30,36 @@ linLabMatrixTranspose <- as_tibble(reshape2::dcast(linLabMelted, formula=  cell_
 
 linLabMatrixTranspose$cell_id <- as.character(linLabMatrixTranspose$cell_id)
 
+corTable <- tbl_df(h5read(here("/Documents/BCB330/TF_FeatureExtraction/features.h5"), "/resnet_v1_101/logits"))
+#table <- tbl_df(h5read("/Users/lfrench/Desktop/results/TF_FeatureExtraction/features.h5", "/resnet_v1_101/logits"))
 
-#TODO table needs to be renamed and needs to use here() library
-table <- tbl_df(h5read("/Users/minhanho/Documents/BCB330/TF_FeatureExtraction/features.h5", "/resnet_v1_101/logits"))
-table <- tbl_df(h5read("/Users/lfrench/Desktop/results/TF_FeatureExtraction/features.h5", "/resnet_v1_101/logits"))
+corTable <- as_tibble(t(as.matrix(corTable)), .name.repair=NULL)
 
-table <- as_tibble(t(as.matrix(table)), .name.repair=NULL)
+filenames <- h5read(here("/Documents/BCB330/TF_FeatureExtraction/features.h5"), "filenames")
+#filenames <- h5read("/Users/lfrench/Desktop/results/TF_FeatureExtraction/features.h5", "filenames")
 
-filenames <- h5read("/Users/minhanho/Documents/BCB330/TF_FeatureExtraction/features.h5", "filenames")
-filenames <- h5read("/Users/lfrench/Desktop/results/TF_FeatureExtraction/features.h5", "filenames")
-table %<>% mutate( fullFilename = filenames) 
+corTable %<>% mutate( fullFilename = filenames) 
 filenames <- gsub(".*processed/", "", filenames)
 
-table %<>% mutate( filename = filenames) %>% select(filename, everything())
-table %<>% mutate( filename = gsub("cell", "", filename))
-table %<>% mutate( filename = gsub(".png", "", filename))
-table %<>% mutate( filename = gsub("−", "_", filename))
-table %<>%  rename(cell_id = filename)
+corTable %<>% mutate( filename = filenames) %>% select(filename, everything())
+corTable %<>% mutate( filename = gsub("cell", "", filename))
+corTable %<>% mutate( filename = gsub(".png", "", filename))
+corTable %<>% mutate( filename = gsub("−", "_", filename))
+corTable %<>%  rename(cell_id = filename)
 #full filename is at the end if needed
 
-length(intersect(linLabMatrixTranspose$cell_id, table$cell_id))
+length(intersect(linLabMatrixTranspose$cell_id, corTable$cell_id))
 
-full_table <- inner_join(linLabMatrixTranspose, table)
+full_table <- inner_join(linLabMatrixTranspose, corTable)
 dim(full_table)
 
 system.time(full_table %>% summarise_at(vars(starts_with("V9")), funs(cor(., full_table$`4930431P03Rik`))))
 
 cor.test(full_table$`4930431P03Rik`, full_table$V998)
 
-full_table %>% write_csv("/Users/minhanho/Documents/BCB330/TF_FeatureExtraction/features_with_level1class_with_genes.csv")
-  
+#Why is this here???
+#full_table %>% write_csv("/Users/minhanho/Documents/BCB330/TF_FeatureExtraction/features_with_level1class_with_genes.csv")
+
   
 #correlate full table
 system.time(full_cor <- cor(full_table %>% select_if(is.numeric)))
