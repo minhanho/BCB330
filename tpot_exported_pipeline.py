@@ -4,7 +4,12 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.model_selection import train_test_split
 
 from pandas_ml import ConfusionMatrix
-import pylab as plt
+#import pylab as plt
+
+from sklearn.metrics import confusion_matrix
+import seaborn as sns
+import matplotlib.pyplot as plt
+
 
 # NOTE: Make sure that the class is labeled 'target' in the data file
 tpot_data = pd.read_csv('/Users/minhanho/Documents/BCB330/TF_FeatureExtraction/features_with_level1class.csv')
@@ -25,8 +30,27 @@ for i in tpot_data["target"]:
     if i not in cell_types:
         cell_types.append(i)
 
-mat = ConfusionMatrix(testing_target, results)
-print(mat)
+cm = confusion_matrix(testing_target, results, cell_types)
+print(cm)
+cm_sum = np.sum(cm, axis=1, keepdims=True)
+cm_perc = cm / cm_sum.astype(float) * 100
+annot = np.empty_like(cm).astype(str)
+nrows, ncols = cm.shape
+for i in range(nrows):
+    for j in range(ncols):
+        c = cm[i, j]
+        p = cm_perc[i, j]
+        if i == j:
+            s = cm_sum[i]
+            annot[i, j] = '%.1f%%\n%d/%d' % (p, c, s)
+        elif c == 0:
+            annot[i, j] = ''
+        else:
+            annot[i, j] = '%.1f%%\n%d' % (p, c)
+cm = pd.DataFrame(cm, index=cell_types, columns=cell_types)
+cm.index.name = 'Actual'
+cm.columns.name = 'Predicted'
+fig, ax = plt.subplots(figsize=(7,7))
+sns.heatmap(cm, annot=annot, fmt='', ax=ax)
 
-mat.plot()
 plt.show()
