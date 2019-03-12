@@ -2,9 +2,9 @@ import numpy as np
 import pandas as pd
 from sklearn.linear_model import LogisticRegression
 from sklearn.model_selection import train_test_split
-from sklearn.metrics import confusion_matrix
-import pylab as plt
 
+from pandas_ml import ConfusionMatrix
+import pylab as plt
 
 # NOTE: Make sure that the class is labeled 'target' in the data file
 tpot_data = pd.read_csv('/Users/minhanho/Documents/BCB330/TF_FeatureExtraction/features_with_level1class.csv')
@@ -25,15 +25,8 @@ for i in tpot_data["target"]:
     if i not in cell_types:
         cell_types.append(i)
 
-mat = confusion_matrix(testing_target, results, cell_types)
+mat = ConfusionMatrix(testing_target, results)
 print(mat)
-fig = plt.figure()
-ax = fig.add_subplot(111)
-cax = ax.matshow(mat)
-plt.title('Confusion matrix of the classifier')
-fig.colorbar(cax)
-ax.set_xticklabels([''] + cell_types)
-ax.set_yticklabels([''] + cell_types)
-plt.xlabel('Predicted')
-plt.ylabel('True')
+
+mat.plot()
 plt.show()
