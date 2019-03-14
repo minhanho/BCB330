@@ -31,7 +31,7 @@ linLabMatrixTranspose <- as_tibble(reshape2::dcast(linLabMelted, formula=  cell_
 linLabMatrixTranspose$cell_id <- as.character(linLabMatrixTranspose$cell_id)
 
 corTable <- tbl_df(h5read(here("/Documents/BCB330/TF_FeatureExtraction/features.h5"), "/resnet_v1_101/logits"))
-#table <- tbl_df(h5read("/Users/lfrench/Desktop/results/TF_FeatureExtraction/features.h5", "/resnet_v1_101/logits"))
+#corTable <- tbl_df(h5read("/Users/lfrench/Desktop/results/TF_FeatureExtraction/features.h5", "/resnet_v1_101/logits"))
 
 corTable <- as_tibble(t(as.matrix(corTable)), .name.repair=NULL)
 
@@ -78,4 +78,16 @@ full_cor_melted %<>% arrange(-abs(correlation))
 
 cor.test(full_table$Tspan13, full_table$V932)
 
-full_cor_melted %>% select(gene_symbol) %>% distinct() %>% write_csv("/Users/minhanho/Downloads/images.csv")
+full_table
+
+filteredTop <- 
+cor.test(full_table$Tspan13, full_table$V932)
+
+colnames(corTable)
+cell_id
+
+#filtering to see correlation inside of a cell class (level 1)
+filtered_full_table <- inner_join(full_table, cellTable %>% filter(level1class == 'pyramidal CA1') %>% select(cell_id, level1class))
+
+filtered_full_table
+cor.test(filtered_full_table$Tspan13, filtered_full_table$V932)
