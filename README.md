@@ -26,6 +26,13 @@ tar xf resnet_v1_101_2016_08_28.tar.gz
 ```
 
 ## Image Processing
+```
+git clone https://github.com/minhanho/BCB330.git
+cd ~/BCB330
+mkdir data/processed/
+```
+* Run imageManipulation.R
+
 [In Progress]
 
 ## Feature Extraction
@@ -34,7 +41,7 @@ tar xf resnet_v1_101_2016_08_28.tar.gz
 git clone https://github.com/tomrunia/TF_FeatureExtraction
 cd ~/tensorflow
 export PYTHONPATH="/models/research/slim"
-python3 example_feat_extract.py --network inception_v4 --checkpoint ../checkpoints/inception_v4.ckpt --image_path /Users/minhanho/Documents/BCB330/data/processed/ --out_file ./features.h5 --layer_names Logits
+python3 example_feat_extract.py --network inception_v4 --checkpoint ../checkpoints/inception_v4.ckpt --image_path ~/BCB330/data/processed/ --out_file ./features.h5 --layer_names Logits
 ```
 [In Progress]
 
