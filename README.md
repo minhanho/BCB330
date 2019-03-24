@@ -33,8 +33,6 @@ mkdir data/processed/
 ```
 * Run imageManipulation.R
 
-[In Progress]
-
 ## Feature Extraction
 * Feature extraction steps are from: https://github.com/tomrunia/TF_FeatureExtraction
 ```
@@ -43,5 +41,18 @@ cd ~/tensorflow
 export PYTHONPATH="/models/research/slim"
 python3 example_feat_extract.py --network resnet_v1_101 --checkpoint ../checkpoints/resnet_v1_101.ckpt --image_path ~/BCB330/data/processed/ --out_file ./features.h5 --num_classes 1000 --layer_names resnet_v1_101/logits
 ```
-[In Progress]
+
+## Classifier Determination
+* Run h5ExampleCode.R
+```
+python TPOTClassifer.py
+```
+
+## Classification
+```
+python tpot_exported_pipeline.py
+```
+
+## Correlations
+* Run ZeiselAndMerge.R
 
