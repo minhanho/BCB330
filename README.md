@@ -28,8 +28,8 @@ tar xf resnet_v1_101_2016_08_28.tar.gz
 ## Image Processing
 ```
 git clone https://github.com/minhanho/BCB330.git
-cd ~/BCB330
-mkdir data/processed/
+cd ~/BCB330/data
+mkdir processed
 ```
 * Run imageManipulation.R
 
