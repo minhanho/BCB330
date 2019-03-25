@@ -43,12 +43,12 @@ python3 example_feat_extract.py --network resnet_v1_101 --checkpoint ../checkpoi
 ## Classifier Determination
 * Run h5ExampleCode.R
 ```
-python TPOTClassifer.py
+python3 TPOTClassifer.py
 ```
 
 ## Classification
 ```
-python tpot_exported_pipeline.py
+python3 tpot_exported_pipeline.py
 ```
 
 ## Correlations
