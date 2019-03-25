@@ -29,6 +29,7 @@ tar xf resnet_v1_101_2016_08_28.tar.gz
 ```
 git clone https://github.com/minhanho/BCB330.git
 ```
+* Complete TO DO in imageManipulation.R
 * Run imageManipulation.R
 
 ## Feature Extraction
@@ -42,6 +43,7 @@ python3 example_feat_extract.py --network resnet_v1_101 --checkpoint ../checkpoi
 ```
 
 ## Classifier Determination
+* Complete TO DO in h5ExampleCode.R
 * Run h5ExampleCode.R
 ```
 python3 TPOTClassifer.py
@@ -56,5 +58,6 @@ python3 tpot_exported_pipeline.py
 ```
 git clone https://github.com/leonfrench/CellTypesAging.git
 ```
+* Complete TO DO in ZeiselAndMerge.R
 * Run ZeiselAndMerge.R
 
