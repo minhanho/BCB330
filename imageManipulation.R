@@ -1,15 +1,20 @@
-#install.packages("magick")
-#install.packages("here")
+install.packages("magick")
+install.packages("pdftools")
+install.packages("here")
 library(magick)
 library(pdftools)
 library(here)
 
-dir.create(here("data/processed"))
+#TO DO
+cellImages = "[YOUR PATH HERE]/BCB330/data/cell_images_all_heatmaporder_jun26_2014.pdf"
+processed = "[YOUR PATH HERE]/BCB330/data/processed"
+
+dir.create(processed)
 
 for (pageNum in 1:120){
-  cells <- image_read_pdf(here( "data/cell_images_all_heatmaporder_jun26_2014.pdf"), pages=c(pageNum))
+  cells <- image_read_pdf(cellImages, pages=c(pageNum))
   
-  text <- pdf_text(here( "data/cell_images_all_heatmaporder_jun26_2014.pdf"))
+  text <- pdf_text(cellImages)
   
   page_text <- text[pageNum]
   page_text <- gsub("\n", " ", page_text)

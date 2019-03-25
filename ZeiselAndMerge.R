@@ -5,8 +5,11 @@ library(magrittr)
 library(readr)
 library(rhdf5)
 
-linLabMatrix <- read_tsv(here("Documents/BCB330/CellTypesAging/data/Zeisel/expression_mRNA_17-Aug-2014.tsv"), col_names=F)
-#linLabMatrix <- read_tsv("/Users/lfrench/Desktop/results/CellTypesAging/data/Zeisel/expression_mRNA_17-Aug-2014.tsv", col_names=F)
+#TO DO
+mRNAexpression = "[YOUR PATH HERE]/BCB330/CellTypesAging/data/Zeisel/expression_mRNA_17-Aug-2014.tsv"
+features = "[YOUR PATH HERE]/BCB330/TF_FeatureExtraction/features.h5"
+
+linLabMatrix <- read_tsv(mRNAexpression, col_names=F)
 cellTable <- as_tibble(t(linLabMatrix[1:10,2:ncol(linLabMatrix)]), .name.repair=NULL)
 colnames(cellTable) <- cellTable[1,]
 (cellTable <- cellTable[-1,])
@@ -21,22 +24,16 @@ colnames(linLabMatrix)[1] <- "geneName"
 linLabMelted <- reshape2::melt(linLabMatrix,factorsAsStrings = TRUE, id.vars=c("geneName"), variable.name = "cell_id", value.name = "moleculeCount")
 linLabMelted <- tbl_df(linLabMelted)
 linLabMelted$moleculeCount <- as.numeric(linLabMelted$moleculeCount)
-
 linLabMelted <- mutate(linLabMelted, log1Expression = log(1+moleculeCount))
-
 linLabMelted %<>% select(geneName, cell_id, log1Expression)
-
 linLabMatrixTranspose <- as_tibble(reshape2::dcast(linLabMelted, formula=  cell_id ~ geneName))
-
 linLabMatrixTranspose$cell_id <- as.character(linLabMatrixTranspose$cell_id)
 
-corTable <- tbl_df(h5read(here("/Documents/BCB330/TF_FeatureExtraction/features.h5"), "/resnet_v1_101/logits"))
-#corTable <- tbl_df(h5read("/Users/lfrench/Desktop/results/TF_FeatureExtraction/features.h5", "/resnet_v1_101/logits"))
+corTable <- tbl_df(h5read(features, "/resnet_v1_101/logits"))
 
 corTable <- as_tibble(t(as.matrix(corTable)), .name.repair=NULL)
 
-filenames <- h5read(here("/Documents/BCB330/TF_FeatureExtraction/features.h5"), "filenames")
-#filenames <- h5read("/Users/lfrench/Desktop/results/TF_FeatureExtraction/features.h5", "filenames")
+filenames <- h5read(here(features, "filenames")
 
 corTable %<>% mutate( fullFilename = filenames) 
 filenames <- gsub(".*processed/", "", filenames)
