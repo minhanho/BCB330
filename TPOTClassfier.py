@@ -2,7 +2,11 @@ from tpot import TPOTClassifier
 from sklearn.model_selection import train_test_split
 import pandas as pd
 
-df = pd.read_csv("/Users/minhanho/Documents/BCB330/TF_FeatureExtraction/features_with_level1class.csv")
+#TODO
+featureLevel1 = "[YOUR PATH HERE]/BCB330/TF_FeatureExtraction/features_with_level1class.csv"
+
+
+df = pd.read_csv(featureLevel1)
 
 cell_types = {}
 count = 0

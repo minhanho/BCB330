@@ -6,9 +6,10 @@ from sklearn.metrics import confusion_matrix
 import seaborn as sns
 import matplotlib.pyplot as plt
 
+#TODO
+featureLevel1 = "[YOUR PATH HERE]/BCB330/TF_FeatureExtraction/features_with_level1class.csv"
 
-# NOTE: Make sure that the class is labeled 'target' in the data file
-tpot_data = pd.read_csv('/Users/minhanho/Documents/BCB330/TF_FeatureExtraction/features_with_level1class.csv')
+tpot_data = pd.read_csv(featureLevel1)
 first = tpot_data.drop('target', axis=1)
 second = first.drop('fullFilename', axis=1)
 features = second.drop('cell_id', axis=1).values
