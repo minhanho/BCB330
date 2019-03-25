@@ -37,6 +37,7 @@ git clone https://github.com/minhanho/BCB330.git
 git clone https://github.com/tomrunia/TF_FeatureExtraction
 cd ~/tensorflow
 export PYTHONPATH="/models/research/slim"
+cd ~/BCB330
 python3 example_feat_extract.py --network resnet_v1_101 --checkpoint ../checkpoints/resnet_v1_101.ckpt --image_path ~/BCB330/data/processed/ --out_file ./features.h5 --num_classes 1000 --layer_names resnet_v1_101/logits
 ```
 
@@ -52,5 +53,8 @@ python3 tpot_exported_pipeline.py
 ```
 
 ## Correlations
+```
+git clone https://github.com/leonfrench/CellTypesAging.git
+```
 * Run ZeiselAndMerge.R
 
