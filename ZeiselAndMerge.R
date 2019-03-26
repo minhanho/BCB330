@@ -33,7 +33,7 @@ corTable <- tbl_df(h5read(features, "/resnet_v1_101/logits"))
 
 corTable <- as_tibble(t(as.matrix(corTable)), .name.repair=NULL)
 
-filenames <- h5read(here(features, "filenames")
+filenames <- h5read(here(features, "filenames"))
 
 corTable %<>% mutate( fullFilename = filenames) 
 filenames <- gsub(".*processed/", "", filenames)
@@ -54,9 +54,6 @@ system.time(full_table %>% summarise_at(vars(starts_with("V9")), funs(cor(., ful
 
 cor.test(full_table$`4930431P03Rik`, full_table$V998)
 
-#Why is this here???
-#full_table %>% write_csv("/Users/minhanho/Documents/BCB330/TF_FeatureExtraction/features_with_level1class_with_genes.csv")
-
   
 #correlate full table
 system.time(full_cor <- cor(full_table %>% select_if(is.numeric)))
@@ -75,16 +72,19 @@ full_cor_melted %<>% arrange(-abs(correlation))
 
 cor.test(full_table$Tspan13, full_table$V932)
 
-full_table
-
-filteredTop <- 
-cor.test(full_table$Tspan13, full_table$V932)
-
-colnames(corTable)
-cell_id
-
 #filtering to see correlation inside of a cell class (level 1)
-filtered_full_table <- inner_join(full_table, cellTable %>% filter(level1class == 'pyramidal CA1') %>% select(cell_id, level1class))
+pyramidalCA1_full_table <- inner_join(full_table, cellTable %>% filter(level1class == 'pyramidal CA1') %>% select(cell_id, level1class))
+cor.test(pyramidalCA1_full_table$Tspan13, pyramidalCA1_full_table$V932)
+cor.test(pyramidalCA1_full_table$Nsg2, pyramidalCA1_full_table$V932)
+cor.test(pyramidalCA1_full_table$Grm5, pyramidalCA1_full_table$V932)
+cor.test(pyramidalCA1_full_table$Wasf1, pyramidalCA1_full_table$V932)
+cor.test(pyramidalCA1_full_table$Gria1, pyramidalCA1_full_table$V932)
+cor.test(pyramidalCA1_full_table$Cpne6, pyramidalCA1_full_table$V932)
+cor.test(pyramidalCA1_full_table$Fam131a, pyramidalCA1_full_table$V932)
+cor.test(pyramidalCA1_full_table$Ppp3ca, pyramidalCA1_full_table$V932)
+cor.test(pyramidalCA1_full_table$Camkv, pyramidalCA1_full_table$V932)
 
-filtered_full_table
-cor.test(filtered_full_table$Tspan13, filtered_full_table$V932)
+
+oligodendrocytes_full_table <- inner_join(full_table, cellTable %>% filter(level1class == 'oligodendrocytes') %>% select(cell_id, level1class))
+
+cor.test(oligodendrocytes_full_table$Trf, oligodendrocytes_full_table$V249)
