@@ -1,3 +1,4 @@
+library(ggplot2)
 library(here)
 library(reshape2)
 library(dplyr)
@@ -54,7 +55,12 @@ system.time(full_table %>% summarise_at(vars(starts_with("V9")), funs(cor(., ful
 
 cor.test(full_table$`4930431P03Rik`, full_table$V998)
 
-  
+#plotting code from Leon
+for_plot <- full_table %>% select(cell_id, Tspan13, V932)
+for_plot <- inner_join(for_plot, cellTable %>% select(cell_id, level1class))
+ggplot(data = for_plot, aes(x=Tspan13, y= V932, color= level1class)) + geom_point() + geom_smooth(method='lm')
+
+
 #correlate full table
 system.time(full_cor <- cor(full_table %>% select_if(is.numeric)))
 #takes 15 minutes on Leon's machine
