@@ -63,3 +63,7 @@ git clone https://github.com/leonfrench/CellTypesAging.git
 * Complete TO DO in ZeiselAndMerge.R
 * Run ZeiselAndMerge.R
 
+## Testing
+* Run runImage.R
+* Run runh5test.R
+* Run runMergeTest.R
