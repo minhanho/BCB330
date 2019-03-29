@@ -37,7 +37,7 @@ run_correlations <- function(path){
     
     corTable <- as_tibble(t(as.matrix(corTable)), .name.repair=NULL)
     
-    filenames <- h5read(here(features, "filenames"))
+    filenames <- h5read(features, "filenames")
     
     corTable %<>% mutate( fullFilename = filenames) 
     filenames <- gsub(".*processed/", "", filenames)
@@ -55,8 +55,6 @@ run_correlations <- function(path){
     dim(full_table)
     
     system.time(full_table %>% summarise_at(vars(starts_with("V9")), funs(cor(., full_table$`4930431P03Rik`))))
-    
-    cor.test(full_table$`4930431P03Rik`, full_table$V998)
     
     #plotting code from Leon
     for_plot <- full_table %>% select(cell_id, Tspan13, V932)
@@ -103,4 +101,4 @@ run_correlations <- function(path){
   }
 }
 #TO DO
-process_h5(path = "[YOUR PATH HERE]")
+run_correlations(path = "[YOUR PATH HERE]")
