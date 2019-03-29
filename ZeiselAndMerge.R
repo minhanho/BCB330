@@ -7,9 +7,9 @@ library(readr)
 library(rhdf5)
 
 run_correlations <- function(path){
-  #TO DO
-  mRNAexpression = "[YOUR PATH HERE]/BCB330/CellTypesAging/data/Zeisel/expression_mRNA_17-Aug-2014.tsv"
-  features = "[YOUR PATH HERE]/BCB330/TF_FeatureExtraction/features.h5"
+
+  mRNAexpression = paste(path, "/BCB330/CellTypesAging/data/Zeisel/expression_mRNA_17-Aug-2014.tsv", sep="")
+  features = paste(path, "/BCB330/TF_FeatureExtraction/features.h5", sep="")
   
   if ((file.exists(mRNAexpression)) & (file.exists(features)))
   {
@@ -102,3 +102,5 @@ run_correlations <- function(path){
     print("Incorrect path")
   }
 }
+#TO DO
+process_h5(path = "[YOUR PATH HERE]")

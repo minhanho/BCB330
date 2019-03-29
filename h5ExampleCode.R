@@ -4,8 +4,8 @@ library(tidyr)
 library(rhdf5)
 library(readr)
 
+
 process_h5 <- function(path){
-  #TO DO
   mRNAexpression = paste(path, "/BCB330/CellTypesAging/data/Zeisel/expression_mRNA_17-Aug-2014.tsv", sep="")
   features = paste(path, "/BCB330/TF_FeatureExtraction/features.h5", sep="")
   featuresLevel1 = paste(path, "/BCB330/TF_FeatureExtraction/features_with_level1class.csv", sep="")
@@ -37,3 +37,6 @@ process_h5 <- function(path){
       return("Incorrect path")
   }
 }
+
+#TO DO
+process_h5(path = "[YOUR PATH HERE]")

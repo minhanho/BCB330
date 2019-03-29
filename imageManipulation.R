@@ -5,10 +5,9 @@ library(here)
 library(magick)
 library(pdftools)
 library(here)
-path = "/Users/minhanho/Documents/"
+
 
 process_images <- function(path){
-  #TO DO
   cellImages = paste(path, "/BCB330/data/cell_images_all_heatmaporder_jun26_2014.pdf", sep="")
   processed = paste(path, "/BCB330/data/processed/", sep="")
   
@@ -47,5 +46,7 @@ process_images <- function(path){
       return("cellImages path is incorrect")
     }
   }
-  
 }
+
+#TO DO
+process_images(path = "[YOUR PATH HERE]")
