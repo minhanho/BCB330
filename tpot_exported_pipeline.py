@@ -7,7 +7,7 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 
 #TODO
-featureLevel1 = "[YOUR PATH HERE]/BCB330/TF_FeatureExtraction/features_with_level1class.csv"
+featureLevel1 = "/Users/minhanho/Documents/BCB330/TF_FeatureExtraction/features_with_level1class.csv"
 
 tpot_data = pd.read_csv(featureLevel1)
 first = tpot_data.drop('target', axis=1)
