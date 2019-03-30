@@ -50,16 +50,17 @@ run_correlations <- function(path){
     #full filename is at the end if needed
     
     length(intersect(linLabMatrixTranspose$cell_id, corTable$cell_id))
-    
     full_table <- inner_join(linLabMatrixTranspose, corTable)
-    dim(full_table)
-    
-    system.time(full_table %>% summarise_at(vars(starts_with("V9")), funs(cor(., full_table$`4930431P03Rik`))))
+    full_table %>% summarise_at(vars(starts_with("V9")), funs(cor(., full_table$`4930431P03Rik`)))
     
     #plotting code from Leon
     for_plot <- full_table %>% select(cell_id, Tspan13, V932)
     for_plot <- inner_join(for_plot, cellTable %>% select(cell_id, level1class))
     ggplot(data = for_plot, aes(x=Tspan13, y= V932, color= level1class)) + geom_point() + geom_smooth(method='lm')
+    
+    for_plot <- full_table %>% select(cell_id, Trf, V249)
+    for_plot <- inner_join(for_plot, cellTable %>% select(cell_id, level1class))
+    ggplot(data = for_plot, aes(x=Trf, y= V249, color= level1class)) + geom_point() + geom_smooth(method='lm')
     
     
     #correlate full table
@@ -76,25 +77,6 @@ run_correlations <- function(path){
     full_cor_melted <- as_tibble(melt(full_cor))
     full_cor_melted %<>% rename(gene_symbol=Var1, image_feature = Var2, correlation=value)
     full_cor_melted %<>% arrange(-abs(correlation))
-    
-    cor.test(full_table$Tspan13, full_table$V932)
-    
-    #filtering to see correlation inside of a cell class (level 1)
-    pyramidalCA1_full_table <- inner_join(full_table, cellTable %>% filter(level1class == 'pyramidal CA1') %>% select(cell_id, level1class))
-    cor.test(pyramidalCA1_full_table$Tspan13, pyramidalCA1_full_table$V932)
-    cor.test(pyramidalCA1_full_table$Nsg2, pyramidalCA1_full_table$V932)
-    cor.test(pyramidalCA1_full_table$Grm5, pyramidalCA1_full_table$V932)
-    cor.test(pyramidalCA1_full_table$Wasf1, pyramidalCA1_full_table$V932)
-    cor.test(pyramidalCA1_full_table$Gria1, pyramidalCA1_full_table$V932)
-    cor.test(pyramidalCA1_full_table$Cpne6, pyramidalCA1_full_table$V932)
-    cor.test(pyramidalCA1_full_table$Fam131a, pyramidalCA1_full_table$V932)
-    cor.test(pyramidalCA1_full_table$Ppp3ca, pyramidalCA1_full_table$V932)
-    cor.test(pyramidalCA1_full_table$Camkv, pyramidalCA1_full_table$V932)
-    
-    
-    oligodendrocytes_full_table <- inner_join(full_table, cellTable %>% filter(level1class == 'oligodendrocytes') %>% select(cell_id, level1class))
-    
-    cor.test(oligodendrocytes_full_table$Trf, oligodendrocytes_full_table$V249)
     
   } else{
     print("Incorrect path")
