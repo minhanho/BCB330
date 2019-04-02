@@ -1,11 +1,6 @@
 
 library(magick)
 library(pdftools)
-library(here)
-library(magick)
-library(pdftools)
-library(here)
-
 
 process_images <- function(path){
   cellImages = paste(path, "/BCB330/data/cell_images_all_heatmaporder_jun26_2014.pdf", sep="")
@@ -32,7 +27,7 @@ process_images <- function(path){
           dimRows <- paste("540x540+0+", as.character(540*(rowNum-1) + 12.5*(rowNum-1)), sep="")
           cropRow <- image_crop(cropCol, dimRows)
           final <- image_crop(cropRow, "540x485+0+55")
-          cellPath <- here("data", "processed", paste0("cell",cell_ids_in_page_order[counter], ".png"))
+          cellPath <- paste(path, "data", "processed", paste0("cell",cell_ids_in_page_order[counter], ".png"))
           counter <- counter + 1
           image_write(final, path= cellPath, format= "png")
           if (!file.exists(cellPath)) {
